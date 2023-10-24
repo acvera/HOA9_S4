@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: INSTALL UPDATES (Ubuntu)
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+  - name: INSTALL UPDATES (CentOS)
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "CentOS"
+
+  - name: install wget (CentOS)
+    yum:
+      name: wget
+      state: latest
+    when: ansible_distribution == "CentOS"
+
+- hosts: ubuntu_prom
+  become: true
+  roles:
+    - ubuntu_prom
+
+- hosts: centos_prom
+  become: true
+  roles:
+    - centos_prom
